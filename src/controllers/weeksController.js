@@ -11,6 +11,7 @@ export const getFirstWeekInfo = async (req, res, next) => {
     if (data !== null) {
       const states = {
         weekNumber: data.weekNumber,
+        daysToMeeting: 280,
         babySize: data.babySize,
         babyWeight: data.babyWeight,
         image: data.image,
@@ -31,7 +32,7 @@ export const getFirstWeekInfo = async (req, res, next) => {
 const dueDate = new Date('2026-07-20'); //!змінити на дату з профілю
 
 export const getWeekInfo = async (req, res, next) => {
-  const weekNumber = calculateWeekNumber(dueDate);
+  const { weekNumber, diffDays: daysToMeeting } = calculateWeekNumber(dueDate);
   try {
     const data = await BabyState.findOne({
       weekNumber: weekNumber,
@@ -40,6 +41,7 @@ export const getWeekInfo = async (req, res, next) => {
     if (data !== null) {
       const states = {
         weekNumber: data.weekNumber,
+        daysToMeeting,
         babySize: data.babySize,
         babyWeight: data.babyWeight,
         image: data.image,
