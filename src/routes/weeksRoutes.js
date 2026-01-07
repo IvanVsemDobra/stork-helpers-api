@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { getFirstWeekInfo, getWeekInfo } from '../controllers/weeksController';
+import {
+  getFirstWeekInfo,
+  getWeekInfo,
+} from '../controllers/weeksController.js';
 
 const router = Router();
 

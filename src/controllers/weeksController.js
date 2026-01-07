@@ -1,5 +1,5 @@
 import { calculateWeekNumber } from '../utils/calculateWeekNumber.js';
-import { BabyState } from './models/baby_states.js';
+import { BabyState } from '../models/baby_states.js';
 import createHttpError from 'http-errors';
 
 export const getFirstWeekInfo = async (req, res, next) => {
