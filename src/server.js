@@ -5,9 +5,9 @@ import 'dotenv/config';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
 
-import { BabyState } from './models/baby_states.js';
 import { MomState } from './models/mom_state.model.js';
 import { Emotion } from './models/emotion.model.js';
+import weeksRoutes from './routes/weeksRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
@@ -25,7 +25,7 @@ app.use(
         ignore: 'pid,hostname',
       },
     },
-  })
+  }),
 );
 
 /* ========= Маршрути ========= */
@@ -40,45 +40,7 @@ app.get('/', (req, res) => {
 /* ===== BABY STATES ===== */
 
 // Усі стани дитини
-app.get('/baby-states', async (req, res, next) => {
-  try {
-    const states = await BabyState.find({ isPublished: true }).sort({
-      weekNumber: 1,
-    });
-
-    res.status(200).json(states);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Стан дитини по тижню
-app.get('/baby-states/:weekNumber', async (req, res, next) => {
-  try {
-    const weekNumber = Number(req.params.weekNumber);
-
-    if (Number.isNaN(weekNumber)) {
-      return res.status(400).json({
-        message: 'Номер тижня має бути числом',
-      });
-    }
-
-    const state = await BabyState.findOne({
-      weekNumber,
-      isPublished: true,
-    });
-
-    if (!state) {
-      return res.status(404).json({
-        message: 'Дані про розвиток дитини для цього тижня не знайдено',
-      });
-    }
-
-    res.status(200).json(state);
-  } catch (error) {
-    next(error);
-  }
-});
+app.use(weeksRoutes);
 
 /* ===== MOM STATES ===== */
 
