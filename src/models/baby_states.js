@@ -34,4 +34,4 @@ export const BabyStatesSchema = new Schema(
   }
 );
 
-export const BabyState = model('BabyState', BabyStatesSchema);
+export const BabyState = model('BabyState', BabyStatesSchema, "baby_states");

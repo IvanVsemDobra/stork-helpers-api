@@ -3,10 +3,14 @@ import { BabyState } from '../models/baby_states.js';
 import createHttpError from 'http-errors';
 
 export const getFirstWeekInfo = async (req, res, next) => {
-  try {
+  try
+  {
+    console.log('DB:', BabyState.db.name);
+    console.log('COLLECTION:', BabyState.collection.name);
+
     const data = await BabyState.findOne({
       weekNumber: 1,
-      isPublished: true,
+      // isPublished: true,
     });
     if (data !== null) {
       const states = {
@@ -33,10 +37,13 @@ const dueDate = new Date('2026-07-20'); //!змінити на дату з пр�
 
 export const getWeekInfo = async (req, res, next) => {
   const { weekNumber, diffDays: daysToMeeting } = calculateWeekNumber(dueDate);
-  try {
+  try
+  {
+    console.log('DB:', BabyState.db.name);
+    console.log('COLLECTION:', BabyState.collection.name);
     const data = await BabyState.findOne({
       weekNumber: weekNumber,
-      isPublished: true,
+      // isPublished: true,
     });
     if (data !== null) {
       const states = {
