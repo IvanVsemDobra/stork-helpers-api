@@ -5,10 +5,8 @@ import 'dotenv/config';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
 
-import { MomState } from './models/mom_state.model.js';
-import { Emotion } from './models/emotion.model.js';
 import weeksRoutes from './routes/weeksRoutes.js';
-
+import emotionsRouts from './routes/emotionsRouts.js';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
@@ -37,55 +35,12 @@ app.get('/', (req, res) => {
   });
 });
 
-/* ===== BABY STATES ===== */
+/* ===== BABY AND MOM STATES ===== */
 
-// Усі стани дитини
 app.use(weeksRoutes);
 
-/* ===== MOM STATES ===== */
-
-// Емоційний стан мами по тижню
-app.get('/mom-states/:weekNumber', async (req, res, next) => {
-  try {
-    const weekNumber = Number(req.params.weekNumber);
-
-    if (Number.isNaN(weekNumber)) {
-      return res.status(400).json({
-        message: 'Номер тижня має бути числом',
-      });
-    }
-
-    const momState = await MomState.findOne({
-      weekNumber,
-      isPublished: true,
-    }).populate('feelings', 'title');
-
-    if (!momState) {
-      return res.status(404).json({
-        message: 'Дані про емоційний стан для цього тижня не знайдено',
-      });
-    }
-
-    res.status(200).json(momState);
-  } catch (error) {
-    next(error);
-  }
-});
-
-/* ===== EMOTIONS ===== */
-
-// Отримати всі активні емоції
-app.get('/emotions', async (req, res, next) => {
-  try {
-    const emotions = await Emotion.find({ isActive: true }).sort({
-      title: 1,
-    });
-
-    res.status(200).json(emotions);
-  } catch (error) {
-    next(error);
-  }
-});
+//  Емоції
+app.use(emotionsRouts);
 
 /* ========= 404 ========= */
 app.use((req, res) => {

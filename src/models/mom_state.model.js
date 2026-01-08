@@ -10,17 +10,17 @@ const MomStateSchema = new Schema(
       max: 42,
     },
 
-    feelings: [
+    feelings: {
+      states: [{ type: String, trim: true }],
+      sensationDescr: { type: String, trim: true, default: '' },
+    },
+
+    comfortTips: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Emotion',
+        category: { type: String, trim: true, required: true },
+        tip: { type: String, trim: true, required: true },
       },
     ],
-
-    comfortTips: {
-      type: [String],
-      default: [],
-    },
 
     isPublished: {
       type: Boolean,
@@ -29,7 +29,7 @@ const MomStateSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const MomState = model('MomState', MomStateSchema);
