@@ -7,6 +7,7 @@ import { connectMongoDB } from './db/connectMongoDB.js';
 
 import weeksRoutes from './routes/weeksRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
+import tasksRouter from './routes/tasksRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
@@ -38,6 +39,8 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api', weeksRoutes);
 app.use('/api', usersRoutes);
+
+app.use('/api/tasks', tasksRouter);
 
 /* ========= 404 ========= */
 app.use((req, res) => {
