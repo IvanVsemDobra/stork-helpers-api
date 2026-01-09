@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/User/OneDrive/Desktop/OnboardingPage/app/global.css"],"sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700&display=swap');\r\n@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap');\r\n@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');\r\n\r\nhtml,\r\nbody {\r\n  margin: 0;\r\n  padding: 0;\r\n}\r\n\r\nh1,\r\np {\r\n  margin: 0;\r\n  padding: 0;\r\n}"],"names":[],"mappings":"AAIA"}}]
-}

@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/User/OneDrive/Desktop/OnboardingPage/app/%28private%29/layout.tsx"],"sourcesContent":["'use client'\r\n\r\nimport { ReactNode } from 'react'\r\nimport Providers from '../providers'\r\n\r\nexport default function PrivateLayout({ children }: { children: ReactNode }) {\r\n  return <Providers>{children}</Providers>\r\n}\r\n\r\n"],"names":[],"mappings":";;;;;AAGA;AAHA;;;AAKe,SAAS,cAAc,EAAE,QAAQ,EAA2B;IACzE,qBAAO,6LAAC,+HAAS;kBAAE;;;;;;AACrB;KAFwB"}}]
-}
