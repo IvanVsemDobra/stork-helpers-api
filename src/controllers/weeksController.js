@@ -2,25 +2,21 @@ import { calculateWeekNumber } from '../utils/calculateWeekNumber.js';
 import { BabyState } from '../models/baby_states.js';
 import createHttpError from 'http-errors';
 import { MomState } from '../models/mom_state.model.js';
+import { getUserBaseDate } from '../utils/getUserBaseDate.js';
+import { mapBabyState } from '../utils/mapBabyState.js';
 
 export const getFirstWeekInfo = async (req, res, next) => {
   try {
-    console.log('DB:', BabyState.db.name);
-    console.log('COLLECTION:', BabyState.collection.name);
-
     const data = await BabyState.findOne({
       weekNumber: 1,
     });
     if (data !== null) {
+      const babyData = mapBabyState(data);
       const firstWeekData = {
-        weekNumber: data.weekNumber,
+        ...babyData,
         daysToMeeting: 280,
         babySize: data.babySize,
         babyWeight: data.babyWeight,
-        image: data.image,
-        imageAlt: data.imageAlt,
-        babyActivity: data.babyActivity,
-        babyDevelopment: data.babyDevelopment,
         momDailyTips: data.momDailyTips,
       };
       return res.status(200).json(firstWeekData);
@@ -32,25 +28,20 @@ export const getFirstWeekInfo = async (req, res, next) => {
   }
 };
 
-//!dueDate отримуємо або з даних профілю юзера, або, якщо не зазначено = даті реєстрації
-const dueDate = new Date('2026-07-20'); //!це тимчасово, потім прибрати new Date('2026-07-20')
-
 export const getWeekInfo = async (req, res, next) => {
+  const dueDate = getUserBaseDate(req.user);
   const { weekNumber, daysToMeeting } = calculateWeekNumber(dueDate);
   try {
     const data = await BabyState.findOne({
       weekNumber: weekNumber,
     });
     if (data !== null) {
+      const babyData = mapBabyState(data);
       const weekData = {
-        weekNumber: data.weekNumber,
+        ...babyData,
         daysToMeeting,
         babySize: data.babySize,
         babyWeight: data.babyWeight,
-        image: data.image,
-        imageAlt: data.imageAlt,
-        babyActivity: data.babyActivity,
-        babyDevelopment: data.babyDevelopment,
         momDailyTips: data.momDailyTips,
       };
       return res.status(200).json(weekData);
@@ -63,19 +54,17 @@ export const getWeekInfo = async (req, res, next) => {
 };
 
 export const getWeekBabyInfo = async (req, res, next) => {
+  const dueDate = getUserBaseDate(req.user);
   const { weekNumber } = calculateWeekNumber(dueDate);
   try {
     const data = await BabyState.findOne({
       weekNumber: weekNumber,
     });
     if (data !== null) {
+      const babyData = mapBabyState(data);
       const babyWeekData = {
-        weekNumber: data.weekNumber,
+        ...babyData,
         analogy: data.analogy,
-        image: data.image,
-        imageAlt: data.imageAlt,
-        babyActivity: data.babyActivity,
-        babyDevelopment: data.babyDevelopment,
         interestingFact: data.interestingFact,
       };
       return res.status(200).json(babyWeekData);
@@ -88,6 +77,7 @@ export const getWeekBabyInfo = async (req, res, next) => {
 };
 
 export const getWeekMomInfo = async (req, res, next) => {
+  const dueDate = getUserBaseDate(req.user);
   const { weekNumber } = calculateWeekNumber(dueDate);
   console.log('WEEK NUMBER:', weekNumber);
   console.log('DB:', MomState.db.name);

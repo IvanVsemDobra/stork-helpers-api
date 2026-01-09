@@ -32,4 +32,4 @@ const MomStateSchema = new Schema(
   },
 );
 
-export const MomState = model('MomState', MomStateSchema);
+export const MomState = model('MomState', MomStateSchema, 'mom_states');
