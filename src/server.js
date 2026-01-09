@@ -5,6 +5,7 @@ import 'dotenv/config';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
 
+import authRoutes from './routes/authRoutes.js';
 import weeksRoutes from './routes/weeksRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import tasksRouter from './routes/tasksRoutes.js';
@@ -37,6 +38,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.use( '/api', authRoutes );
 app.use('/api', weeksRoutes);
 app.use('/api', usersRoutes);
 
