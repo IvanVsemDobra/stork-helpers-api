@@ -89,6 +89,9 @@ export const getWeekBabyInfo = async (req, res, next) => {
 
 export const getWeekMomInfo = async (req, res, next) => {
   const { weekNumber } = calculateWeekNumber(dueDate);
+  console.log('WEEK NUMBER:', weekNumber);
+  console.log('DB:', MomState.db.name);
+  console.log('COLLECTION:', MomState.collection.name);
   try {
     const data = await MomState.findOne({
       weekNumber: weekNumber,
