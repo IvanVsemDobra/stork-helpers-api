@@ -31,3 +31,33 @@ export const registerUser = async ( req, res, next ) =>
     return next( error );
   };
  };
+
+
+export const loginUser = async ( req, res, next ) =>
+{
+  try
+  {
+    const { email, password } = req.body;
+
+    const user = await User.findOne( { email } );
+    if ( !user )
+    {
+      next( createHttpError( 401, "Invalid credentials" ) );
+    }
+
+    const isValidPassword = bcrypt.compare( password, user.password );
+
+    if ( !isValidPassword )
+    {
+      next( createHttpError( 401, "Invalid credentials" ) );
+    }
+
+    res.status( 200 ).json( user );
+
+  } catch ( error )
+  {
+    return next( error );
+  };
+
+
+};
