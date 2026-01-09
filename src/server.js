@@ -9,13 +9,15 @@ import authRoutes from './routes/authRoutes.js';
 import weeksRoutes from './routes/weeksRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import tasksRouter from './routes/tasksRoutes.js';
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
 /* ========= Middleware ========= */
 app.use(express.json());
-app.use(cors());
+app.use( cors() );
+app.use(cookieParser());
 app.use(
   pino({
     transport: {
