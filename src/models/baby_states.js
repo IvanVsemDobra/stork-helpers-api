@@ -20,10 +20,10 @@ export const BabyStatesSchema = new Schema(
 
     babyActivity: { type: String, required: true, trim: true },
     babyDevelopment: { type: String, required: true, trim: true },
-    interestingFact: { type: String, required: true, trim: true },
+    interestingFact: [{ type: String, required: true, trim: true }],
 
     momDailyTips: {
-      type: [String],
+      type: [{ type: String, trim: true }],
       default: [],
     },
 
@@ -31,7 +31,7 @@ export const BabyStatesSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export const BabyState = model('BabyState', BabyStatesSchema);
+export const BabyState = model('BabyState', BabyStatesSchema, "baby_states");
