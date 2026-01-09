@@ -5,9 +5,11 @@ import 'dotenv/config';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
 
+import authRoutes from './routes/authRoutes.js';
 import weeksRoutes from './routes/weeksRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import tasksRouter from './routes/tasksRoutes.js';
+import cookieParser from "cookie-parser";
 
 import emotionsRouts from './routes/emotionsRouts.js';
 const app = express();
@@ -15,7 +17,8 @@ const PORT = process.env.PORT ?? 3030;
 
 /* ========= Middleware ========= */
 app.use(express.json());
-app.use(cors());
+app.use( cors() );
+app.use(cookieParser());
 app.use(
   pino({
     transport: {
@@ -38,6 +41,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.use( '/api', authRoutes );
 app.use('/api', weeksRoutes);
 app.use('/api', usersRoutes);
 app.use('/api/tasks', tasksRouter);
