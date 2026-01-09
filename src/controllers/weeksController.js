@@ -33,9 +33,11 @@ export const getFirstWeekInfo = async (req, res, next) => {
 };
 
 //!dueDate отримуємо або з даних профілю юзера, або, якщо не зазначено = даті реєстрації
-const dueDate = new Date('2026-07-22'); //!це тимчасово, потім прибрати new Date('2026-07-20')
+// const dueDate = new Date('2026-07-22'); //!це тимчасово, потім прибрати new Date('2026-07-20')
 
 export const getWeekInfo = async (req, res, next) => {
+  const { dueDate } = req.dueDate;
+
   const { weekNumber, daysToMeeting } = calculateWeekNumber(dueDate);
   try {
     const data = await BabyState.findOne({
@@ -63,6 +65,7 @@ export const getWeekInfo = async (req, res, next) => {
 };
 
 export const getWeekBabyInfo = async (req, res, next) => {
+  const { dueDate } = req.dueDate;
   const { weekNumber } = calculateWeekNumber(dueDate);
   try {
     const data = await BabyState.findOne({
@@ -88,6 +91,7 @@ export const getWeekBabyInfo = async (req, res, next) => {
 };
 
 export const getWeekMomInfo = async (req, res, next) => {
+  const { dueDate } = req.dueDate;
   const { weekNumber } = calculateWeekNumber(dueDate);
   console.log('WEEK NUMBER:', weekNumber);
   console.log('DB:', MomState.db.name);
