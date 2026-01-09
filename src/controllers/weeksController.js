@@ -33,7 +33,7 @@ export const getFirstWeekInfo = async (req, res, next) => {
 };
 
 //!dueDate отримуємо або з даних профілю юзера, або, якщо не зазначено = даті реєстрації
-const dueDate = new Date('2026-07-20'); //!це тимчасово, потім прибрати new Date('2026-07-20')
+const dueDate = new Date('2026-07-21'); //!це тимчасово, потім прибрати new Date('2026-07-20')
 
 export const getWeekInfo = async (req, res, next) => {
   const { weekNumber, daysToMeeting } = calculateWeekNumber(dueDate);
