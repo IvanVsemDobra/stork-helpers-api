@@ -11,7 +11,10 @@ import usersRoutes from './routes/usersRoutes.js';
 import tasksRouter from './routes/tasksRoutes.js';
 import cookieParser from "cookie-parser";
 
-import emotionsRouts from './routes/emotionsRouts.js';
+import emotionsRoutes from './routes/emotionsRoutes.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
@@ -45,26 +48,11 @@ app.use( '/api', authRoutes );
 app.use('/api', weeksRoutes);
 app.use('/api', usersRoutes);
 app.use('/api/tasks', tasksRouter);
-app.use('/api', emotionsRouts);
+app.use('/api', emotionsRoutes);
 
-/* ========= 404 ========= */
-app.use((req, res) => {
-  res.status(404).json({
-    message: 'Маршрут не знайдено',
-  });
-});
+app.use(notFoundHandler);
 
-/* ========= Error handler ========= */
-app.use((err, req, res, next) => {
-  console.error(err);
-
-  res.status(500).json({
-    message:
-      process.env.NODE_ENV === 'production'
-        ? 'Сталася помилка сервера'
-        : err.message,
-  });
-});
+app.use(errorHandler);
 
 /* ========= Start ========= */
 const startServer = async () => {
