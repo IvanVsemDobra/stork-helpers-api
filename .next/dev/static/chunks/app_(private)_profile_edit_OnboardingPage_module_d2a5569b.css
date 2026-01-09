@@ -1,0 +1,77 @@
+/* [project]/app/(private)/profile/edit/OnboardingPage.module.css [app-client] (css) */
+.OnboardingPage-module__fPKOnq__page {
+  min-height: 100vh;
+  display: flex;
+}
+
+.OnboardingPage-module__fPKOnq__formSide {
+  box-sizing: border-box;
+  flex: 1;
+  padding: 72px 0 64px 64px;
+}
+
+.OnboardingPage-module__fPKOnq__container {
+  max-width: 592px;
+  margin: 0 auto;
+  padding-left: 15px;
+}
+
+.OnboardingPage-module__fPKOnq__wrapper {
+  width: 480px;
+  margin: 0 auto;
+  padding: 57px 56px;
+}
+
+.OnboardingPage-module__fPKOnq__title {
+  text-align: center;
+  letter-spacing: .01em;
+  margin-bottom: 32px;
+  font-family: Comfortaa, sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.OnboardingPage-module__fPKOnq__imageSide {
+  width: 50vw;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.OnboardingPage-module__fPKOnq__imageWrapper {
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.OnboardingPage-module__fPKOnq__image {
+  object-fit: cover;
+  object-position: right center;
+  width: auto;
+  height: 100%;
+}
+
+@media (min-width: 1920px) {
+  .OnboardingPage-module__fPKOnq__imageSide {
+    width: 45vw;
+  }
+}
+
+@media (max-width: 1200px) {
+  .OnboardingPage-module__fPKOnq__imageSide {
+    width: 55vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .OnboardingPage-module__fPKOnq__imageSide {
+    display: none;
+  }
+}
+
+/*# sourceMappingURL=app_%28private%29_profile_edit_OnboardingPage_module_d2a5569b.css.map*/

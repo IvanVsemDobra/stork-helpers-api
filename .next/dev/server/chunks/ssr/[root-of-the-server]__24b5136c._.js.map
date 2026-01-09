@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/User/OneDrive/Desktop/OnboardingPage/app/providers.tsx"],"sourcesContent":["'use client'\r\nimport { ReactNode, useState } from 'react'\r\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query'\r\n\r\nexport default function Providers({ children }: { children: ReactNode }) {\r\n  const [queryClient] = useState(() => new QueryClient())\r\n\r\n  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>\r\n}"],"names":[],"mappings":";;;;;AACA;AACA;AAAA;AAFA;;;;AAIe,SAAS,UAAU,EAAE,QAAQ,EAA2B;IACrE,MAAM,CAAC,YAAY,GAAG,IAAA,iNAAQ,EAAC,IAAM,IAAI,4LAAW;IAEpD,qBAAO,8OAAC,6MAAmB;QAAC,QAAQ;kBAAc;;;;;;AACpD"}}]
+}

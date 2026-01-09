@@ -1,0 +1,141 @@
+.form {
+  max-width: 592px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.avatarImage {
+  width: 164px;
+  height: 164px;
+  border-radius: 50%;
+  background: #f2f2f2;
+  object-fit: cover;
+}
+
+.uploadButton {
+  background: #f2f2f2;
+  border-radius: 999px;
+  padding: 10px 24px;
+  border-bottom: 4px solid #9d9d9d;
+  cursor: pointer;
+}
+
+.fields {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+}
+
+.input {
+  background: #f2f2f2;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: none;
+  font-size: 16px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownTrigger {
+  width: 100%;
+  background: #f2f2f2;
+  border-radius: 12px;
+  padding: 12px 44px 12px 14px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+}
+
+.placeholder {
+  color: #9d9d9d;
+}
+
+.filled {
+  color: #000;
+}
+
+.arrow {
+  width: 24px;
+  height: 24px;
+  fill: #7f7f7f;
+  position: relative;
+  left: 30px;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+}
+
+.dropdownItem {
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdownItem:hover {
+  background-color: #e6e6e6;
+}
+
+.submitWrapper {
+  margin-top: 24px;
+}
+
+.submitButton {
+  width: 480px;
+  background: #ffdae0;
+  border-radius: 100px;
+  padding: 12px 24px;
+  border-bottom: 4px solid #e5aeb8;
+  font-size: 16px;
+  cursor: pointer;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #e53935;
+  font-size: 13px;
+}
