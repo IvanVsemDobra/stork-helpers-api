@@ -2,6 +2,9 @@ import crypto from 'crypto';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time.js';
 import { Session } from '../models/session.js';
 
+/**
+ * Створення сесії
+ */
 export const createSession = async (userId) => {
   const accessToken = crypto.randomBytes(30).toString('base64');
   const refreshToken = crypto.randomBytes(30).toString('base64');
@@ -15,6 +18,9 @@ export const createSession = async (userId) => {
   });
 };
 
+/**
+ * Встановлення cookies для сесії
+ */
 export const setSessionCookies = (res, session) => {
   const isProd = process.env.NODE_ENV === 'production';
 
