@@ -12,7 +12,7 @@ export const registerUser = async ( req, res, next ) =>
     const isUserExist = await User.findOne( { email } );
     if ( isUserExist )
     {
-      return next( createHttpError( 404, "This email is already in use" ) );
+      return next(createHttpError(409, 'Email already exists'));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
