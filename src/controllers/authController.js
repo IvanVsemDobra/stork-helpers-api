@@ -12,7 +12,7 @@ export const registerUser = async ( req, res, next ) =>
     const isUserExist = await User.findOne( { email } );
     if ( isUserExist )
     {
-      return next( createHttpError( 404, "This email is already in use" ) );
+      return next(createHttpError(409, 'Email already exists'));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -51,12 +51,11 @@ export const loginUser = async ( req, res, next ) =>
       next( createHttpError( 401, "Invalid credentials" ) );
     }
 
-    const isValidPassword = bcrypt.compare( password, user.password );
+    const isValidPassword = await bcrypt.compare(password, user.password);
 
-    if ( !isValidPassword )
-    {
-      next( createHttpError( 401, "Invalid credentials" ) );
-    }
+if (!isValidPassword) {
+  return next(createHttpError(401, 'Invalid credentials'));
+}
 
     await Session.deleteOne({ userId: user._id });
 
