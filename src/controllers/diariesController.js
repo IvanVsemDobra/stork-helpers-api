@@ -17,7 +17,7 @@ export const getAllDiaryNote = async (req, res, next) => {
   try {
     const { _id: userId } = req.user;
 
-    const diaryNotes = await DiaryNote.find({ userId }); //+.populate('emotions');додати ось це?
+    const diaryNotes = await DiaryNote.find({ userId });
 
     res.status(200).json(diaryNotes);
   } catch (error) {
