@@ -9,7 +9,8 @@ import authRoutes from './routes/authRoutes.js';
 import weeksRoutes from './routes/weeksRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import tasksRouter from './routes/tasksRoutes.js';
-import cookieParser from "cookie-parser";
+import diariesRoutes from './routes/diariesRoutes.js';
+import cookieParser from 'cookie-parser';
 
 import emotionsRoutes from './routes/emotionsRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -20,7 +21,7 @@ const PORT = process.env.PORT ?? 3030;
 
 /* ========= Middleware ========= */
 app.use(express.json());
-app.use( cors() );
+app.use(cors());
 app.use(cookieParser());
 app.use(
   pino({
@@ -44,11 +45,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.use( '/api', authRoutes );
+app.use('/api', authRoutes);
 app.use('/api', weeksRoutes);
 app.use('/api', usersRoutes);
 app.use('/api/tasks', tasksRouter);
 app.use('/api', emotionsRoutes);
+app.use('/api', diariesRoutes);
 
 app.use(notFoundHandler);
 
