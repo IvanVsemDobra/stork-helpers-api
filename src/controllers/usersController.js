@@ -43,7 +43,13 @@ export const updateUserAvatar = async (req, res, next) => {
       { new: true }
     );
 
-    res.status(200).json(updatedUser);
+    if (!updatedUser) {
+      throw createHttpError(404, 'User not found');
+    }
+
+    res.status(200).json({
+      avatar: updatedUser.avatar,
+    });
   } catch (error) {
     next(error);
   }

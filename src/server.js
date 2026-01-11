@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import 'dotenv/config';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './docs/swagger.js';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
 
@@ -41,6 +43,9 @@ app.use(
   }),
 );
 
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 /* ========= Routes ========= */
 
 app.get('/api/health', (req, res) => {
@@ -50,12 +55,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.use('/api', authRoutes);
-app.use('/api', weeksRoutes);
-app.use('/api', usersRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
 app.use('/api/tasks', tasksRouter);
-app.use('/api', emotionsRoutes);
-app.use('/api', diariesRoutes);
+app.use('/api/diaries', diariesRoutes);
+app.use('/api/weeks', weeksRoutes);
+app.use('/api/emotions', emotionsRoutes);
 
 app.use(notFoundHandler);
 
