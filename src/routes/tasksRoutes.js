@@ -5,6 +5,33 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/tasks:
+ *   post:
+ *     tags: [Tasks]
+ *     summary: Створити завдання
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name, date]
+ *             properties:
+ *               name:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: Завдання створено
+ */
+
+
 router.post(
   '/',
   authenticate,

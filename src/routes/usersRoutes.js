@@ -9,13 +9,40 @@ import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 
-router.get('/users/me', authenticate, getCurrentUser);
-router.patch('/users', authenticate, updateUser);
+
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     tags: [Users]
+ *     summary: Отримати поточного користувача
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Дані користувача
+ */
+
+/**
+ * GET current user
+ */
+router.get('/me', authenticate, getCurrentUser);
+
+/**
+ * UPDATE user profile
+ * body: { name, dueDate, theme }
+ */
+router.patch('/me', authenticate, updateUser);
+
+/**
+ * UPDATE user avatar
+ * form-data: avatar
+ */
 router.patch(
-  '/users/avatar',
+  '/avatar',
   authenticate,
   upload.single('avatar'),
-  updateUserAvatar,
+  updateUserAvatar
 );
 
 export default router;
