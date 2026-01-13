@@ -15,4 +15,7 @@ router.get('/me/my-day', getWeekInfo); //запит на інфо для сто�
 router.get('/me/journey/baby', getWeekBabyInfo); //запит для сторінки Подорож малюк
 router.get('/me/journey/mom', getWeekMomInfo); //запит для сторінки Подорож мама
 
+router.get('/me/journey/baby/:weekNumber', getWeekBabyInfo); //запит для сторінки Подорож малюк за номером тижня
+router.get('/me/journey/mom/:weekNumber', getWeekMomInfo); //запит для сторінки Подорож мама за номером тижня
+
 export default router;
