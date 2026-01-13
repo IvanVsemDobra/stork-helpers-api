@@ -54,8 +54,12 @@ export const getWeekInfo = async (req, res, next) => {
 };
 
 export const getWeekBabyInfo = async (req, res, next) => {
-  const dueDate = getUserBaseDate(req.user);
-  const { weekNumber } = calculateWeekNumber(dueDate);
+  let { weekNumber } = req.params;
+  if (!weekNumber) {
+    const dueDate = getUserBaseDate(req.user);
+    ({ weekNumber } = calculateWeekNumber(dueDate));
+  }
+
   try {
     const data = await BabyState.findOne({
       weekNumber: weekNumber,
@@ -77,11 +81,11 @@ export const getWeekBabyInfo = async (req, res, next) => {
 };
 
 export const getWeekMomInfo = async (req, res, next) => {
-  const dueDate = getUserBaseDate(req.user);
-  const { weekNumber } = calculateWeekNumber(dueDate);
-  console.log('WEEK NUMBER:', weekNumber);
-  console.log('DB:', MomState.db.name);
-  console.log('COLLECTION:', MomState.collection.name);
+  let { weekNumber } = req.params;
+  if (!weekNumber) {
+    const dueDate = getUserBaseDate(req.user);
+    ({ weekNumber } = calculateWeekNumber(dueDate));
+  }
   try {
     const data = await MomState.findOne({
       weekNumber: weekNumber,
@@ -94,7 +98,7 @@ export const getWeekMomInfo = async (req, res, next) => {
       };
       return res.status(200).json(momWeekData);
     } else {
-      next(createHttpError(404, 'Mother data not found'));
+      next(createHttpError(404, 'Mom data not found'));
     }
   } catch (error) {
     next(error);
