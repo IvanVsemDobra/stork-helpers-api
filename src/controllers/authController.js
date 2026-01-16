@@ -1,5 +1,7 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { verifyGoogleToken } from '../services/googleAuth.service.js';
 
 import { User } from '../models/user.model.js';
 import { Session } from '../models/session.js';
@@ -28,8 +30,6 @@ export const registerUser = async (req, res, next) => {
       name,
       password: hashedPassword,
     });
-
-
 
     res.status(201).json(newUser);
   } catch (error) {
@@ -67,6 +67,55 @@ export const loginUser = async (req, res, next) => {
 };
 
 /**
+ * Логін з Google
+ */
+export async function googleAuth(req, res) {
+  try {
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({ message: 'Missing credential' });
+    }
+
+    // 1. Verify Google ID token
+    const googleUser = await verifyGoogleToken(credential);
+
+    // 2. Find or create user
+    let user = await User.findOne({ email: googleUser.email });
+
+    if (!user) {
+      user = await User.create({
+        email: googleUser.email,
+        name: googleUser.name,
+        avatar: googleUser.avatar,
+        googleId: googleUser.googleId,
+        hasCompletedOnboarding: false,
+        provider: 'google',
+      });
+    }
+
+    // 3. Create JWT
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    });
+
+    // 4. Set cookie
+    res.cookie('session', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false, // true у prod
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    // 5. Return user
+    return res.json({ user });
+  } catch (err) {
+    console.error('Google auth error:', err);
+    return res.status(401).json({ message: 'Google authentication failed' });
+  }
+}
+
+/**
  * Logout
  */
 export const logoutUser = async (req, res, next) => {
@@ -98,8 +147,7 @@ export const refreshUserSession = async (req, res, next) => {
       return next(createHttpError(401, 'Session not found'));
     }
 
-    const isExpired =
-      new Date() > new Date(session.refreshTokenValidUntil);
+    const isExpired = new Date() > new Date(session.refreshTokenValidUntil);
 
     if (isExpired) {
       return next(createHttpError(401, 'Session token expired'));
