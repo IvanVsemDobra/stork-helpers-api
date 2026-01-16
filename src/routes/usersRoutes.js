@@ -1,4 +1,5 @@
 import express from 'express';
+
 import {
   getCurrentUser,
   updateUser,
@@ -6,11 +7,12 @@ import {
   updateUserTheme,
   verifyEmail,
 } from '../controllers/usersController.js';
+
 import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/upload.js';
+import { emailRateLimit } from '../middlewares/rateLimit.js';
 
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -24,28 +26,26 @@ const router = express.Router();
  *       200:
  *         description: Дані користувача
  */
-
-/**
- * GET current user
- */
 router.get('/me', authenticate, getCurrentUser);
-
-
-// 🆕 окремий ендпоінт теми
-router.patch('/theme', authenticate, updateUserTheme);
 
 /**
  * UPDATE user profile
- * body: { name, dueDate, theme }
+ * body: { name, dueDate }
+ * email change requires verification
  */
-router.patch('/me', authenticate, updateUser);
+router.patch('/me', authenticate, emailRateLimit, updateUser);
+
+/**
+ * UPDATE user theme
+ */
+router.patch('/me/theme', authenticate, updateUserTheme);
 
 /**
  * UPDATE user avatar
  * form-data: avatar
  */
 router.patch(
-  '/avatar',
+  '/me/avatar',
   authenticate,
   upload.single('avatar'),
   updateUserAvatar

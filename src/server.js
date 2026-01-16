@@ -1,20 +1,22 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import pino from 'pino-http';
 import 'dotenv/config';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './docs/swagger.js';
+import cookieParser from 'cookie-parser';
 
+import { swaggerSpec } from './docs/swagger.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
+import { corsOptions } from './config/cors.js';
 
 import authRoutes from './routes/authRoutes.js';
-import weeksRoutes from './routes/weeksRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import tasksRouter from './routes/tasksRoutes.js';
 import diariesRoutes from './routes/diariesRoutes.js';
-import cookieParser from 'cookie-parser';
-
+import weeksRoutes from './routes/weeksRoutes.js';
 import emotionsRoutes from './routes/emotionsRoutes.js';
+
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
@@ -22,14 +24,12 @@ const app = express();
 const PORT = process.env.PORT ?? 3030;
 
 /* ========= Middleware ========= */
+
 app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true,
-  })
-);
 app.use(cookieParser());
+app.use(helmet());
+app.use(cors(corsOptions));
+
 app.use(
   pino({
     transport: {
@@ -40,13 +40,14 @@ app.use(
         ignore: 'pid,hostname',
       },
     },
-  }),
+  })
 );
 
+/* ========= Swagger ========= */
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-/* ========= Routes ========= */
+/* ========= Health ========= */
 
 app.get('/api/health', (req, res) => {
   res.json({
@@ -55,6 +56,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+/* ========= Routes ========= */
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/tasks', tasksRouter);
@@ -62,11 +65,13 @@ app.use('/api/diaries', diariesRoutes);
 app.use('/api/weeks', weeksRoutes);
 app.use('/api/emotions', emotionsRoutes);
 
-app.use(notFoundHandler);
+/* ========= Errors ========= */
 
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 /* ========= Start ========= */
+
 const startServer = async () => {
   await connectMongoDB();
 
