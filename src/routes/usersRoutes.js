@@ -3,6 +3,8 @@ import {
   getCurrentUser,
   updateUser,
   updateUserAvatar,
+  updateUserTheme,
+  verifyEmail,
 } from '../controllers/usersController.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/upload.js';
@@ -28,6 +30,10 @@ const router = express.Router();
  */
 router.get('/me', authenticate, getCurrentUser);
 
+
+// 🆕 окремий ендпоінт теми
+router.patch('/theme', authenticate, updateUserTheme);
+
 /**
  * UPDATE user profile
  * body: { name, dueDate, theme }
@@ -44,5 +50,10 @@ router.patch(
   upload.single('avatar'),
   updateUserAvatar
 );
+
+/**
+ * VERIFY new email
+ */
+router.get('/verify-email/:token', verifyEmail);
 
 export default router;
