@@ -12,6 +12,13 @@ import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/upload.js';
 import { emailRateLimit } from '../middlewares/rateLimit.js';
 
+router.patch(
+  '/me',
+  authenticate,
+  emailRateLimit, 
+  updateUser
+);
+
 const router = express.Router();
 
 /**
