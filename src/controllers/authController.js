@@ -102,8 +102,8 @@ export async function googleAuth(req, res) {
     // 4. Set cookie
     res.cookie('session', token, {
       httpOnly: true,
-      sameSite: 'lax',
-      secure: false, // true у prod
+      sameSite: 'none',
+      secure: true, // true у prod
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
