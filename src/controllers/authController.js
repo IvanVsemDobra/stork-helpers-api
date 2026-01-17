@@ -1,6 +1,5 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { verifyGoogleToken } from '../services/googleAuth.service.js';
 
 import { User } from '../models/user.model.js';
@@ -69,18 +68,16 @@ export const loginUser = async (req, res, next) => {
 /**
  * Логін з Google
  */
-export async function googleAuth(req, res) {
+export async function googleAuth(req, res, next) {
   try {
     const { credential } = req.body;
 
     if (!credential) {
-      return res.status(400).json({ message: 'Missing credential' });
+      return next(createHttpError(400, 'Missing credential'));
     }
 
-    // 1. Verify Google ID token
     const googleUser = await verifyGoogleToken(credential);
 
-    // 2. Find or create user
     let user = await User.findOne({ email: googleUser.email });
 
     if (!user) {
@@ -94,24 +91,17 @@ export async function googleAuth(req, res) {
       });
     }
 
-    // 3. Create JWT
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '7d',
-    });
 
-    // 4. Set cookie
-    res.cookie('session', token, {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true, // true у prod
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    await Session.deleteMany({ userId: user._id });
 
-    // 5. Return user
-    return res.json({ user });
-  } catch (err) {
-    console.error('Google auth error:', err);
-    return res.status(401).json({ message: 'Google authentication failed' });
+
+    const newSession = await createSession(user._id);
+    setSessionCookies(res, newSession);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error('Google auth error:', error);
+    next(createHttpError(401, 'Google authentication failed'));
   }
 }
 
