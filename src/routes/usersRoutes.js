@@ -6,22 +6,9 @@ import {
 } from '../controllers/usersController.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/upload.js';
+import { emailRateLimit } from '../middlewares/rateLimit.js';
 
-const router = express.Router();
-
-
-/**
- * @swagger
- * /api/users/me:
- *   get:
- *     tags: [Users]
- *     summary: Отримати поточного користувача
- *     security:
- *       - cookieAuth: []
- *     responses:
- *       200:
- *         description: Дані користувача
- */
+const router = express.Router(); // ❗ ОБОВʼЯЗКОВО ДО ВСІХ router.patch / router.get
 
 /**
  * GET current user
@@ -30,9 +17,15 @@ router.get('/me', authenticate, getCurrentUser);
 
 /**
  * UPDATE user profile
- * body: { name, dueDate, theme }
+ * body: { name, dueDate, theme, email }
+ * email → з верифікацією + rate limit
  */
-router.patch('/me', authenticate, updateUser);
+router.patch(
+  '/me',
+  authenticate,
+  emailRateLimit,
+  updateUser
+);
 
 /**
  * UPDATE user avatar
@@ -46,3 +39,4 @@ router.patch(
 );
 
 export default router;
+
