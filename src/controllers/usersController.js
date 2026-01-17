@@ -3,16 +3,23 @@ import crypto from 'crypto';
 import { User } from '../models/user.model.js';
 import { sendVerifyEmail } from '../services/emailService.js';
 
+/**
+ * GET /users/me
+ */
 export const getCurrentUser = async (req, res) => {
   res.status(200).json(req.user);
 };
 
-
+/**
+ * PATCH /users/me
+ * Оновлення профілю користувача (name, dueDate, email, theme)
+ */
 export const updateUser = async (req, res, next) => {
   try {
-    const { name, dueDate, email } = req.body;
+    const { name, dueDate, email, theme } = req.body;
 
-    if (!name && !dueDate && !email) {
+    // ❗ нічого не передали
+    if (!name && !dueDate && !email && !theme) {
       throw createHttpError(400, 'No data to update');
     }
 
@@ -20,6 +27,14 @@ export const updateUser = async (req, res, next) => {
 
     if (name) updateData.name = name;
     if (dueDate) updateData.dueDate = dueDate;
+
+    // 🎨 theme — частина профілю
+    if (theme) {
+      if (!['girl', 'boy', 'neutral'].includes(theme)) {
+        throw createHttpError(400, 'Invalid theme');
+      }
+      updateData.theme = theme;
+    }
 
     // 🔐 якщо змінюють email — запускаємо верифікацію
     if (email) {
@@ -32,18 +47,30 @@ export const updateUser = async (req, res, next) => {
       await sendVerifyEmail(email, token);
     }
 
-    await User.findByIdAndUpdate(req.user._id, updateData);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw createHttpError(404, 'User not found');
+    }
 
     res.status(200).json({
       message: email
         ? 'Confirm new email via message'
         : 'Profile updated',
+      user: updatedUser,
     });
   } catch (error) {
     next(error);
   }
 };
 
+/**
+ * GET /users/verify-email/:token
+ */
 export const verifyEmail = async (req, res, next) => {
   try {
     const { token } = req.params;
@@ -72,6 +99,9 @@ export const verifyEmail = async (req, res, next) => {
   }
 };
 
+/**
+ * PATCH /users/avatar
+ */
 export const updateUserAvatar = async (req, res, next) => {
   try {
     if (!req.file) {
@@ -93,26 +123,6 @@ export const updateUserAvatar = async (req, res, next) => {
     res.status(200).json({
       avatar: updatedUser.avatar,
     });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateUserTheme = async (req, res, next) => {
-  try {
-    const { theme } = req.body;
-
-    if (!['girl', 'boy', 'neutral'].includes(theme)) {
-      throw createHttpError(400, 'Invalid theme');
-    }
-
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { theme },
-      { new: true }
-    );
-
-    res.status(200).json({ theme: user.theme });
   } catch (error) {
     next(error);
   }
