@@ -1,13 +1,69 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
-import { registerUser, loginUser, logoutUser, refreshUserSession } from '../controllers/authController.js';
-import { loginUserSchema, registerUserSchema } from '../validations/authValidation.js';
+
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshUserSession,
+  googleAuth,
+} from '../controllers/authController.js';
+
+import {
+  loginUserSchema,
+  registerUserSchema,
+} from '../validations/authValidation.js';
+
+import { authRateLimit } from '../middlewares/rateLimit.js';
 
 const router = Router();
 
-router.post( '/auth/register', celebrate( registerUserSchema ), registerUser );
-router.post( '/auth/login', celebrate( loginUserSchema ), loginUser );
-router.post( '/auth/logout', logoutUser );
-router.post('/auth/refresh', refreshUserSession);
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Реєстрація користувача
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password, name]
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: test@mail.com
+ *               password:
+ *                 type: string
+ *                 example: qwerty123
+ *               name:
+ *                 type: string
+ *                 example: Anna
+ *     responses:
+ *       201:
+ *         description: Користувач успішно зареєстрований
+ *       409:
+ *         description: Email already exists
+ */
+
+router.post(
+  '/register',
+  authRateLimit,
+  celebrate(registerUserSchema),
+  registerUser
+);
+
+router.post(
+  '/login',
+  authRateLimit,
+  celebrate(loginUserSchema),
+  loginUser
+);
+
+router.post('/google', googleAuth);
+router.post('/logout', logoutUser);
+router.post('/refresh', refreshUserSession);
 
 export default router;

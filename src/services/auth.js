@@ -17,6 +17,7 @@ export const createSession = async (userId) => {
 
 export const setSessionCookies = (res, session) => {
   const isProd = process.env.NODE_ENV === 'production';
+  
   const cookieOptions = {
     httpOnly: true,
     secure: isProd,
@@ -38,4 +39,10 @@ export const setSessionCookies = (res, session) => {
     ...cookieOptions,
     maxAge: ONE_DAY,
   });
+};
+
+export const loginUser = async (res, userId) => {
+  const session = await createSession(userId);
+  setSessionCookies(res, session);
+  return session;
 };

@@ -24,24 +24,41 @@ export const createSession = async (userId) => {
 export const setSessionCookies = (res, session) => {
   const isProd = process.env.NODE_ENV === 'production';
 
-  res.cookie('accessToken', session.accessToken, {
+  const cookieOptions = {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
+  };
+
+  res.cookie('accessToken', session.accessToken, {
+    ...cookieOptions,
     maxAge: FIFTEEN_MINUTES,
   });
 
   res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    ...cookieOptions,
     maxAge: ONE_DAY,
   });
 
   res.cookie('sessionId', session._id.toString(), {
+    ...cookieOptions,
+    maxAge: ONE_DAY,
+  });
+};
+
+/**
+ * Очищення cookies (logout)
+ */
+export const clearSessionCookies = (res) => {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  const options = {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
-    maxAge: ONE_DAY,
-  });
+  };
+
+  res.clearCookie('accessToken', options);
+  res.clearCookie('refreshToken', options);
+  res.clearCookie('sessionId', options);
 };
