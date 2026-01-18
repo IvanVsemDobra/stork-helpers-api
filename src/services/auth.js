@@ -17,25 +17,25 @@ export const createSession = async (userId) => {
 
 export const setSessionCookies = (res, session) => {
   const isProd = process.env.NODE_ENV === 'production';
-
-  res.cookie('accessToken', session.accessToken, {
+  const cookieOptions = {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
+    path: '/',
+  };
+
+  res.cookie('accessToken', session.accessToken, {
+    ...cookieOptions,
     maxAge: FIFTEEN_MINUTES,
   });
 
   res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    ...cookieOptions,
     maxAge: ONE_DAY,
   });
 
   res.cookie('sessionId', session._id.toString(), {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    ...cookieOptions,
     maxAge: ONE_DAY,
   });
 };
