@@ -4,6 +4,7 @@ import { verifyGoogleToken } from '../services/googleAuth.service.js';
 
 import { User } from '../models/user.model.js';
 import { Session } from '../models/session.js';
+// ВАЖЛИВО: Імпортуємо все з одного оновленого файлу
 import {
   createSession,
   setSessionCookies,
@@ -12,6 +13,7 @@ import {
 
 /**
  * Реєстрація
+ * Додано автоматичний логін після реєстрації, щоб уникнути конфліктів сесій
  */
 export const registerUser = async (req, res, next) => {
   try {
@@ -29,6 +31,10 @@ export const registerUser = async (req, res, next) => {
       name,
       password: hashedPassword,
     });
+
+    // Після реєстрації одразу створюємо чисту сесію
+    const session = await createSession(newUser._id);
+    setSessionCookies(res, session);
 
     res.status(201).json(newUser);
   } catch (error) {
@@ -53,7 +59,7 @@ export const loginUser = async (req, res, next) => {
       return next(createHttpError(401, 'Invalid credentials'));
     }
 
-    // видаляємо старі сесії користувача
+    // Видаляємо всі старі сесії цього користувача перед створенням нової
     await Session.deleteMany({ userId: user._id });
 
     const newSession = await createSession(user._id);
@@ -91,9 +97,8 @@ export async function googleAuth(req, res, next) {
       });
     }
 
-
+    // Чистимо старі сесії
     await Session.deleteMany({ userId: user._id });
-
 
     const newSession = await createSession(user._id);
     setSessionCookies(res, newSession);
@@ -107,16 +112,20 @@ export async function googleAuth(req, res, next) {
 
 /**
  * Logout
+ * Тепер використовує виправлений clearSessionCookies з path: '/'
  */
 export const logoutUser = async (req, res, next) => {
   try {
     const { sessionId } = req.cookies;
 
     if (sessionId) {
+      // Видаляємо сесію з бази даних
       await Session.deleteOne({ _id: sessionId });
     }
 
+    // Очищуємо куки в браузері
     clearSessionCookies(res);
+    
     res.status(204).send();
   } catch (error) {
     next(error);
@@ -128,21 +137,22 @@ export const logoutUser = async (req, res, next) => {
  */
 export const refreshUserSession = async (req, res, next) => {
   try {
+    const { sessionId, refreshToken } = req.cookies;
+
     const session = await Session.findOne({
-      _id: req.cookies.sessionId,
-      refreshToken: req.cookies.refreshToken,
+      _id: sessionId,
+      refreshToken: refreshToken,
     });
 
     if (!session) {
       return next(createHttpError(401, 'Session not found'));
     }
 
-    const isExpired = new Date() > new Date(session.refreshTokenValidUntil);
-
-    if (isExpired) {
+    if (new Date() > new Date(session.refreshTokenValidUntil)) {
       return next(createHttpError(401, 'Session token expired'));
     }
 
+    // Видаляємо стару сесію і створюємо нову (Refresh Rotation)
     await Session.deleteOne({ _id: session._id });
 
     const newSession = await createSession(session.userId);
