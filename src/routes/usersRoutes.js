@@ -8,7 +8,7 @@ import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/upload.js';
 import { emailRateLimit } from '../middlewares/rateLimit.js';
 
-const router = express.Router(); // ❗ ОБОВʼЯЗКОВО ДО ВСІХ router.patch / router.get
+const router = express.Router(); // ОБОВʼЯЗКОВО ДО ВСІХ router.patch / router.get
 
 /**
  * GET current user
