@@ -16,21 +16,36 @@ export const authRateLimit = rateLimit({
  */
 const emailRateLimitBase = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 година
-  max: 25, // тільки 5 спроб зміни email
+  max: 5, // максимум 5 змін email на годину
   standardHeaders: true,
   legacyHeaders: false,
-  message: 'Too many email change requests',
+  message: 'Too many email change requests, please try later',
 });
 
 /**
  * УМОВНИЙ rate limit
- * Ліміт застосовується ТІЛЬКИ якщо є email у body
+ * Спрацьовує ТІЛЬКИ якщо реально міняється email
  */
 export const emailRateLimit = (req, res, next) => {
-  if (req.body?.email) {
+  const email = req.body?.email;
+
+  const isEmailChange =
+    typeof email === 'string' &&
+    email.trim().length > 0 &&
+    email !== req.user.email;
+
+  if (isEmailChange) {
     return emailRateLimitBase(req, res, next);
   }
+
   next();
 };
 
-
+/**
+ * Ліміт для resend verification
+ */
+export const resendEmailRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: 'Too many resend attempts, try later',
+});

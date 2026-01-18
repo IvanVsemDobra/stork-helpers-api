@@ -14,12 +14,17 @@ const userSchema = new mongoose.Schema(
       default: 'neutral',
     },
 
-    // 🔽 ДЛЯ EMAIL ВЕРИФІКАЦІЇ
-    pendingEmail: { type: String },
-    emailVerifyToken: { type: String },
-    emailVerifyExpires: { type: Date },
+    // 🔐 production-grade email change flow
+    emailChange: {
+      email: { type: String, trim: true },
+      token: { type: String },
+      expires: { type: Date },
+    },
+
+    // 🕒 антиспам-захист
+    emailChangeRequestedAt: { type: Date },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 userSchema.pre('save', function () {
@@ -30,9 +35,15 @@ userSchema.pre('save', function () {
 
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
+
   delete obj.password;
+  delete obj.emailChange;
+
+  // на випадок старих документів
+  delete obj.pendingEmail;
   delete obj.emailVerifyToken;
   delete obj.emailVerifyExpires;
+
   return obj;
 };
 
