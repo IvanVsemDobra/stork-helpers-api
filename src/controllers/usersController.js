@@ -12,13 +12,11 @@ export const getCurrentUser = async (req, res) => {
 
 /**
  * PATCH /users/me
- * Оновлення профілю користувача (name, dueDate, email, theme)
  */
 export const updateUser = async (req, res, next) => {
   try {
     const { name, dueDate, email, theme } = req.body;
 
-    // ❗ нічого не передали
     if (!name && !dueDate && !email && !theme) {
       throw createHttpError(400, 'No data to update');
     }
@@ -28,7 +26,6 @@ export const updateUser = async (req, res, next) => {
     if (name) updateData.name = name;
     if (dueDate) updateData.dueDate = dueDate;
 
-    // 🎨 theme — частина профілю
     if (theme) {
       if (!['girl', 'boy', 'neutral'].includes(theme)) {
         throw createHttpError(400, 'Invalid theme');
@@ -36,13 +33,13 @@ export const updateUser = async (req, res, next) => {
       updateData.theme = theme;
     }
 
-    // 🔐 якщо змінюють email — запускаємо верифікацію
+    // 🔐 email verification flow
     if (email) {
       const token = crypto.randomBytes(32).toString('hex');
 
       updateData.pendingEmail = email;
       updateData.emailVerifyToken = token;
-      updateData.emailVerifyExpires = Date.now() + 60 * 60 * 1000; // 1 година
+      updateData.emailVerifyExpires = Date.now() + 60 * 60 * 1000;
 
       await sendVerifyEmail(email, token);
     }
@@ -91,9 +88,9 @@ export const verifyEmail = async (req, res, next) => {
 
     await user.save();
 
-    res.status(200).json({
-      message: 'Email successfully verified',
-    });
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/profile?emailVerified=true`
+    );
   } catch (error) {
     next(error);
   }
