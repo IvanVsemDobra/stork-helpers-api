@@ -3,7 +3,7 @@ import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time.js';
 import { Session } from '../models/session.js';
 
 /**
- * Створення сесії
+ * 1. Створення сесії в базі даних
  */
 export const createSession = async (userId) => {
   const accessToken = crypto.randomBytes(30).toString('base64');
@@ -19,7 +19,7 @@ export const createSession = async (userId) => {
 };
 
 /**
- * Встановлення cookies для сесії
+ * 2. Встановлення кук у браузері
  */
 export const setSessionCookies = (res, session) => {
   const isProd = process.env.NODE_ENV === 'production';
@@ -28,6 +28,7 @@ export const setSessionCookies = (res, session) => {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
+    path: '/', // КРИТИЧНО: дозволяє кукам працювати на всіх сторінках
   };
 
   res.cookie('accessToken', session.accessToken, {
@@ -47,7 +48,8 @@ export const setSessionCookies = (res, session) => {
 };
 
 /**
- * Очищення cookies (logout)
+ * 3. Очищення кук (Logout)
+ * ВАЖЛИВО: Опції МАЮТЬ БУТИ ТАКИМИ САМИМИ, як при встановленні
  */
 export const clearSessionCookies = (res) => {
   const isProd = process.env.NODE_ENV === 'production';
@@ -56,9 +58,19 @@ export const clearSessionCookies = (res) => {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
+    path: '/', // ТЕПЕР БРАУЗЕР ТОЧНО ВИДАЛИТЬ КУКУ
   };
 
   res.clearCookie('accessToken', options);
   res.clearCookie('refreshToken', options);
   res.clearCookie('sessionId', options);
+};
+
+/**
+ * 4. Хелпер для швидкого логіну
+ */
+export const loginUser = async (res, userId) => {
+  const session = await createSession(userId);
+  setSessionCookies(res, session);
+  return session;
 };
