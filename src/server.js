@@ -23,6 +23,12 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
+/* =====================================================
+   ВАЖЛИВО: довіряємо проксі (Render / Vercel / Next.js)
+   Без цього secure cookies НЕ працюють
+===================================================== */
+app.set('trust proxy', 1);
+
 /* ========= Middleware ========= */
 
 app.use(express.json());
@@ -73,11 +79,18 @@ app.use(errorHandler);
 /* ========= Start ========= */
 
 const startServer = async () => {
-  await connectMongoDB();
+  try {
+    await connectMongoDB();
 
-  app.listen(PORT, () => {
-    console.log(`🚀 API running on http://localhost:${PORT}`);
-  });
+    app.listen(PORT, () => {
+      console.log(`API running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('❌ Server start error:', error);
+    process.exit(1);
+  }
 };
 
 startServer();
+
+export default app;

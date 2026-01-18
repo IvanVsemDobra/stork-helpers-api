@@ -16,7 +16,7 @@ export const authRateLimit = rateLimit({
  */
 const emailRateLimitBase = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 година
-  max: 5, // тільки 5 спроб зміни email
+  max: 25, // тільки 5 спроб зміни email
   standardHeaders: true,
   legacyHeaders: false,
   message: 'Too many email change requests',
