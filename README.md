@@ -9,7 +9,7 @@ MongoDB + Mongoose
 
 JWT + Sessions
 
-Swagger (API docs)
+Swagger (API docs) https://stork-helpers-api.onrender.com/api-docs/
 
 Multer (file upload)
 
