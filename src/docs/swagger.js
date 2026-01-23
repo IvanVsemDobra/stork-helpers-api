@@ -1,5 +1,11 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
+// Динамічний URL сервера
+const SERVER_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://stork-helpers-api.onrender.com' // живий сервер Render
+    : 'http://localhost:3030';                // локальна розробка
+
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -10,7 +16,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3030',
+        url: SERVER_URL,
       },
     ],
 
