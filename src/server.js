@@ -16,6 +16,7 @@ import tasksRouter from './routes/tasksRoutes.js';
 import diariesRoutes from './routes/diariesRoutes.js';
 import weeksRoutes from './routes/weeksRoutes.js';
 import emotionsRoutes from './routes/emotionsRoutes.js';
+import debugRoutes from './routes/debug.js';
 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -40,7 +41,11 @@ app.use(
     },
   })
 );
+
+// Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -48,19 +53,26 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Основні API
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/tasks', tasksRouter);
 app.use('/api/diaries', diariesRoutes);
 app.use('/api/weeks', weeksRoutes);
 app.use('/api/emotions', emotionsRoutes);
+
+// Debug роут (тільки для локальної перевірки)
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/debug', debugRoutes);
+}
+
+// Хендлери помилок
 app.use(notFoundHandler);
 app.use(errorHandler);
 
 const startServer = async () => {
   try {
     await connectMongoDB();
-
     app.listen(PORT, () => {
       console.log(`🚀 API running on http://localhost:${PORT}`);
     });
@@ -73,5 +85,3 @@ const startServer = async () => {
 startServer();
 
 export default app;
-
-
