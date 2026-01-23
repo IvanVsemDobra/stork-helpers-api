@@ -1,0 +1,13 @@
+PRs by viktoriiapopel
+#68 Google auth
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/68
+Created at: 2026-01-17T13:08:00Z
+
+#58 fix set cookie googlebtn
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/58
+Created at: 2026-01-16T11:56:42Z
+
+#57 fix google auth
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/57
+Created at: 2026-01-16T10:58:57Z
+

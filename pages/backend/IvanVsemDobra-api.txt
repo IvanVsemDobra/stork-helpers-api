@@ -1,0 +1,81 @@
+PRs by IvanVsemDobra
+#75 update user
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/75
+Created at: 2026-01-18T22:49:43Z
+
+#74 add cookie-based session authentication middleware
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/74
+Created at: 2026-01-18T21:59:19Z
+
+#73 feat(users): add email change verification flow
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/73
+Created at: 2026-01-18T21:24:40Z
+
+#70 pathServer
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/70
+Created at: 2026-01-18T13:30:24Z
+
+#67 run
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/67
+Created at: 2026-01-17T12:27:56Z
+
+#66 feat(user): allow updating theme in user profile
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/66
+Created at: 2026-01-17T10:22:31Z
+
+#65 chore: update env config
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/65
+Created at: 2026-01-17T07:12:59Z
+
+#64 fix(users-routes): initialize router before usage
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/64
+Created at: 2026-01-16T17:30:00Z
+
+#63 feat(rate-limit): conditionally limit email change requests
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/63
+Created at: 2026-01-16T17:10:32Z
+
+#62 fix(cors): allow ngrok frontend origin
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/62
+Created at: 2026-01-16T16:01:48Z
+
+#61 feat(users): add theme endpoint, email verification and rate limiting
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/61
+Created at: 2026-01-16T15:27:18Z
+
+#60 chore: add nodemailer to dependencies for email verification
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/60
+Created at: 2026-01-16T13:39:26Z
+
+#59 feat(users): add theme update endpoint and email verification flow
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/59
+Created at: 2026-01-16T13:31:06Z
+
+#54 fix(auth): correct register response and remove unused variable
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/54
+Created at: 2026-01-12T14:19:35Z
+
+#53 Fix/users auth middleware
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/53
+Created at: 2026-01-11T18:53:14Z
+
+#52 refactor(auth): move session logic to session service (#51)
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/52
+Created at: 2026-01-10T22:37:30Z
+
+#51 refactor(auth): move session logic to session service
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/51
+Created at: 2026-01-10T18:34:18Z
+
+#50 fix(auth): correct cookie options for dev and production
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/50
+Created at: 2026-01-10T18:03:36Z
+
+#49 Fix/backend critical
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/49
+Created at: 2026-01-10T17:18:43Z
+
+#22 apiUser update
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/22
+Created at: 2026-01-07T14:56:02Z
+

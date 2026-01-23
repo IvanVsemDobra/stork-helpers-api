@@ -1,0 +1,21 @@
+PRs by AntonZorkin
+#55 mom/baby info by weekNumber
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/55
+Created at: 2026-01-13T09:14:02Z
+
+#45 Privat routes fix
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/45
+Created at: 2026-01-09T19:10:09Z
+
+#28 Errors handling and routes naming
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/28
+Created at: 2026-01-09T09:58:08Z
+
+#26 Mom and baby data + emotions to controller
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/26
+Created at: 2026-01-08T18:13:13Z
+
+#20 C:/Program Files/Git/api/weeks Task 1 and 2
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/20
+Created at: 2026-01-07T11:21:44Z
+

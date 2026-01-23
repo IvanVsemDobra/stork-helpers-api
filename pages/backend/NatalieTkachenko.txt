@@ -1,0 +1,13 @@
+PRs by NatalieTkachenko
+#31 Feature/api auth 2
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/31
+Created at: 2026-01-09T13:46:09Z
+
+#29 Feature/api auth
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/29
+Created at: 2026-01-09T12:40:03Z
+
+#27 Fix MongoDB connection and weeksController
+URL: https://github.com/IvanVsemDobra/stork-helpers-api/pull/27
+Created at: 2026-01-08T23:46:08Z
+

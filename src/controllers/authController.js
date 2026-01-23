@@ -125,7 +125,7 @@ export const logoutUser = async (req, res, next) => {
 
     // Очищуємо куки в браузері
     clearSessionCookies(res);
-    
+
     res.status(204).send();
   } catch (error) {
     next(error);

@@ -1,5 +1,6 @@
 const allowedOrigins = [
   'http://localhost:3000',
+  'http://localhost:3030', // swagger / same-origin
   'https://domonique-slimsy-madalene.ngrok-free.dev',
   'https://stork-helpers-next-ten.vercel.app',
   process.env.FRONTEND_URL,
