@@ -24,14 +24,19 @@ const router = Router();
  *         application/json:
  *           schema:
  *             type: object
- *             required: [title, content]
+ *             required: [title, description, emotions]
  *             properties:
  *               title:
  *                 type: string
  *                 example: Мій день
- *               content:
+ *               description:
  *                 type: string
  *                 example: Сьогодні було чудово...
+ *               emotions:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["63f1e2abc123def456789012", "63f1e2abc123def456789013"]
  *     responses:
  *       201:
  *         description: Нотатку успішно створено
@@ -67,8 +72,15 @@ const router = Router();
  *             properties:
  *               title:
  *                 type: string
- *               content:
+ *                 example: Новий день
+ *               description:
  *                 type: string
+ *                 example: Сьогодні було ще краще!
+ *               emotions:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["63f1e2abc123def456789014"]
  *     responses:
  *       200:
  *         description: Нотатку успішно оновлено

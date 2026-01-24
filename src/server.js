@@ -20,11 +20,13 @@ import debugRoutes from './routes/debug.js';
 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { ERRORS } from './constants/errorMessages.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
 app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
@@ -66,18 +68,21 @@ if (process.env.NODE_ENV !== 'production') {
   app.use('/debug', debugRoutes);
 }
 
-// Хендлери помилок
+// 404 Handler
 app.use(notFoundHandler);
+
+// Error Handler
 app.use(errorHandler);
 
+// Старт сервера з обробкою помилок
 const startServer = async () => {
   try {
     await connectMongoDB();
     app.listen(PORT, () => {
       console.log(`🚀 API running on http://localhost:${PORT}`);
     });
-  } catch (error) {
-    console.error('❌ Server start error:', error);
+  } catch (err) {
+    console.error('❌ Server start error:', err?.message ?? ERRORS.COMMON.INTERNAL);
     process.exit(1);
   }
 };

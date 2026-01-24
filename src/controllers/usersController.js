@@ -2,12 +2,17 @@ import createHttpError from 'http-errors';
 import crypto from 'crypto';
 import { User } from '../models/user.model.js';
 import { sendVerifyEmail } from '../services/emailService.js';
+import { ERRORS } from '../constants/errorMessages.js';
 
 /**
  * GET /users/me
  */
-export const getCurrentUser = async (req, res) => {
-  res.status(200).json(req.user);
+export const getCurrentUser = async (req, res, next) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**
@@ -18,7 +23,7 @@ export const updateUser = async (req, res, next) => {
     const { name, dueDate, email, theme } = req.body;
 
     if (!name && !dueDate && !email && !theme) {
-      throw createHttpError(400, 'No data to update');
+      throw createHttpError(400, ERRORS.USER.NO_DATA_TO_UPDATE);
     }
 
     const updateData = {};
@@ -28,7 +33,7 @@ export const updateUser = async (req, res, next) => {
 
     if (theme) {
       if (!['girl', 'boy', 'neutral'].includes(theme)) {
-        throw createHttpError(400, 'Invalid theme');
+        throw createHttpError(400, ERRORS.USER.INVALID_THEME);
       }
       updateData.theme = theme;
     }
@@ -43,15 +48,12 @@ export const updateUser = async (req, res, next) => {
     if (emailChanged) {
       const emailInUse = await User.findOne({ email });
       if (emailInUse) {
-        throw createHttpError(409, 'Email already in use');
+        throw createHttpError(409, ERRORS.USER.EMAIL_EXISTS);
       }
 
       const last = req.user.emailChangeRequestedAt;
       if (last && Date.now() - last.getTime() < 10 * 60 * 1000) {
-        throw createHttpError(
-          429,
-          'You can change email only once per 10 minutes'
-        );
+        throw createHttpError(429, ERRORS.USER.EMAIL_CHANGE_LIMIT);
       }
 
       rawEmailToken = crypto.randomBytes(32).toString('hex');
@@ -76,10 +78,9 @@ export const updateUser = async (req, res, next) => {
     );
 
     if (!updatedUser) {
-      throw createHttpError(404, 'User not found');
+      throw createHttpError(404, ERRORS.USER.NOT_FOUND);
     }
 
-    // email відправляємо ТІЛЬКИ після успішного update
     if (emailChanged) {
       sendVerifyEmail(email, rawEmailToken).catch(console.error);
     }
@@ -121,7 +122,7 @@ export const verifyEmail = async (req, res, next) => {
     );
 
     if (!user) {
-      throw createHttpError(400, 'Invalid or expired token');
+      throw createHttpError(400, ERRORS.EMAIL.INVALID_TOKEN);
     }
 
     return res.redirect(
@@ -140,15 +141,12 @@ export const resendEmailVerification = async (req, res, next) => {
     const user = req.user;
 
     if (!user.emailChange?.email) {
-      throw createHttpError(400, 'No email change request found');
+      throw createHttpError(400, ERRORS.EMAIL.NO_CHANGE_REQUEST);
     }
 
     const last = user.emailChangeRequestedAt;
     if (last && Date.now() - last.getTime() < 10 * 60 * 1000) {
-      throw createHttpError(
-        429,
-        'You can resend verification email once per 10 minutes'
-      );
+      throw createHttpError(429, ERRORS.EMAIL.RESEND_LIMIT);
     }
 
     const rawToken = crypto.randomBytes(32).toString('hex');
@@ -177,7 +175,7 @@ export const resendEmailVerification = async (req, res, next) => {
 export const updateUserAvatar = async (req, res, next) => {
   try {
     if (!req.file) {
-      throw createHttpError(400, 'Avatar file is required');
+      throw createHttpError(400, ERRORS.TASKS.REQUIRED_FIELDS); // створимо окремий блок COMMON, або можна Avatar
     }
 
     const avatar = req.file.buffer.toString('base64');
@@ -189,12 +187,10 @@ export const updateUserAvatar = async (req, res, next) => {
     );
 
     if (!updatedUser) {
-      throw createHttpError(404, 'User not found');
+      throw createHttpError(404, ERRORS.USER.NOT_FOUND);
     }
 
-    res.status(200).json({
-      avatar: updatedUser.avatar,
-    });
+    res.status(200).json({ avatar: updatedUser.avatar });
   } catch (error) {
     next(error);
   }
