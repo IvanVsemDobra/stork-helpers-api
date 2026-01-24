@@ -1,23 +1,28 @@
+import { isCelebrateError } from 'celebrate';
+import { ERRORS } from '../constants/errorMessages.js';
+
 export const errorHandler = (err, req, res, next) => {
-  // Логуємо повну помилку в консоль (корисно для дебагу)
   console.error('Error:', err);
 
-  // Якщо помилка є HTTP-помилкою і має статус (наприклад 400, 401, 404)
-  if (err.status) {
-    return res.status(err.status).json({
-      message: err.message, // повідомлення помилки для клієнта
+  // Celebrate/Joi validation error
+  if (isCelebrateError(err)) {
+    const messages = Array.from(err.details.values()).map(
+      detail => detail.details[0].message
+    );
+    return res.status(400).json({
+      message: 'Validation failed',
+      details: messages,
     });
   }
 
-  // Перевіряємо, чи запущений застосунок у production
-  const isProd = process.env.NODE_ENV === 'production';
+  // Error with custom status (e.g., createHttpError)
+  if (err.status) {
+    return res.status(err.status).json({ message: err.message });
+  }
 
-  // Обробка всіх інших неочікуваних помилок
+  // Internal server error
+  const isProd = process.env.NODE_ENV === 'production';
   res.status(500).json({
-    message: isProd
-      // У production не показуємо деталі помилки з міркувань безпеки
-      ? 'Щось пішло не так. Будь ласка, спробуйте пізніше.'
-      // У development показуємо реальне повідомлення для зручності розробки
-      : err.message,
+    message: isProd ? ERRORS.COMMON.INTERNAL : err.message,
   });
 };

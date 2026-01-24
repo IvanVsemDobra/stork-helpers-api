@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 import DiaryNote from '../models/diaryNote.js';
+import { ERRORS } from '../constants/errorMessages.js';
 
 export const createDiaryNote = async (req, res, next) => {
   try {
@@ -15,10 +16,7 @@ export const createDiaryNote = async (req, res, next) => {
 
 export const getAllDiaryNote = async (req, res, next) => {
   try {
-    const { _id: userId } = req.user;
-
-    const diaryNotes = await DiaryNote.find({ userId });
-
+    const diaryNotes = await DiaryNote.find({ userId: req.user._id });
     res.status(200).json(diaryNotes);
   } catch (error) {
     next(error);
@@ -28,21 +26,15 @@ export const getAllDiaryNote = async (req, res, next) => {
 export const updateDiaryNote = async (req, res, next) => {
   try {
     const { diaryNoteId } = req.params;
-    const { _id: userId } = req.user;
 
     const diaryNote = await DiaryNote.findOneAndUpdate(
-      {
-        _id: diaryNoteId,
-        userId,
-      },
+      { _id: diaryNoteId, userId: req.user._id },
       req.body,
-      {
-        new: true,
-      },
+      { new: true }
     );
 
     if (!diaryNote) {
-      throw createHttpError(404, 'Запис не знайдено');
+      return next(createHttpError(404, ERRORS.COMMON.NOT_FOUND));
     }
 
     res.status(200).json(diaryNote);
@@ -54,15 +46,14 @@ export const updateDiaryNote = async (req, res, next) => {
 export const deleteDiaryNote = async (req, res, next) => {
   try {
     const { diaryNoteId } = req.params;
-    const { _id: userId } = req.user;
 
     const diaryNote = await DiaryNote.findOneAndDelete({
       _id: diaryNoteId,
-      userId,
+      userId: req.user._id,
     });
 
     if (!diaryNote) {
-      throw createHttpError(404, 'Запис не знайдено');
+      return next(createHttpError(404, ERRORS.COMMON.NOT_FOUND));
     }
 
     res.status(200).json({ message: 'Нотатку успішно видалено' });
