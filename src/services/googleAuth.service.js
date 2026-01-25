@@ -1,6 +1,8 @@
 import { OAuth2Client } from 'google-auth-library';
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const client = new OAuth2Client({
+  clientId: process.env.GOOGLE_CLIENT_ID,
+});
 
 export async function verifyGoogleToken(idToken) {
   const ticket = await client.verifyIdToken({
@@ -10,14 +12,18 @@ export async function verifyGoogleToken(idToken) {
 
   const payload = ticket.getPayload();
 
-  if (!payload) {
-    throw new Error('Invalid Google token');
+  if (!payload || !payload.email) {
+    throw new Error('Invalid Google token payload');
+  }
+
+  if (!payload.email_verified) {
+    throw new Error('Google email is not verified');
   }
 
   return {
     googleId: payload.sub,
     email: payload.email,
-    name: payload.name,
+    name: payload.name || payload.email.split('@')[0],
     avatar: payload.picture,
   };
 }

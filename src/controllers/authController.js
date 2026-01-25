@@ -3,7 +3,11 @@ import bcrypt from 'bcrypt';
 import { verifyGoogleToken } from '../services/googleAuth.service.js';
 import { User } from '../models/user.model.js';
 import { Session } from '../models/session.js';
-import { createSession, setSessionCookies, clearSessionCookies } from '../services/session.js';
+import {
+  createSession,
+  setSessionCookies,
+  clearSessionCookies,
+} from '../services/session.js';
 import { ERRORS } from '../constants/errorMessages.js';
 
 /**
@@ -84,8 +88,8 @@ export async function googleAuth(req, res, next) {
         name: googleUser.name,
         avatar: googleUser.avatar,
         googleId: googleUser.googleId,
-        hasCompletedOnboarding: false,
         provider: 'google',
+        hasCompletedOnboarding: false,
       });
     }
 
